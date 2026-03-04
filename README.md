@@ -39,7 +39,7 @@ This framework drives my daily AI work:
 
 ## Key Research References
 
-- "The Prompt Report: A Systematic Survey of Prompting Techniques" (2024)
+- "The Prompt Report: A Systematic Survey of Prompting Techniques" (Schulhoff et al., 2024) — https://arxiv.org/abs/2406.06608
 - "Who Validates the Validators?" (Three Gulfs framework)
 - Anthropic Claude documentation and best practices
 - Aakash Gupta + Hamel Husain: AI Evals for PMs (AMI Cycle)
