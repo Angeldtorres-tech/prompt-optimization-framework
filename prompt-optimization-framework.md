@@ -1,235 +1,169 @@
 # Prompt Optimization Framework
-## A Research-Backed System for Evaluating and Improving AI Prompts
 
-### Author: Angel Torres
-### Version: 1.0 | March 2026
+**Author:** Angel Torres | Alinea Consulting
+**Version:** 1.0 | March 2026
 
----
+## The Problem
 
-## Custom Instructions for Prompt Optimization
+Most people write prompts the way they write emails: stream of consciousness, vague instructions, hope for the best. When the output is wrong, they tweak a word and try again. There is no systematic method for diagnosing why a prompt failed or how to fix it.
 
-When reviewing, optimizing, or evaluating a prompt, systematically apply this framework:
+This framework changes that. It provides a repeatable system for evaluating any prompt against research-backed criteria, identifying what is missing or broken, and applying specific techniques to fix it. It works for any LLM, any task type, and any complexity level.
 
-## Analysis Process
+I built this because prompt engineering shows up in every AI PM job description, but most "prompt engineering" in practice is just trial and error. This framework turns it into a structured discipline.
 
-1. Identify Core Components
-   - Directive (clear instruction/question)
-   - Role/Persona (if beneficial)
-   - Context/Background information
-   - Examples (quality, quantity, ordering)
-   - Output format specification
-   - Reasoning guidance (CoT, step-by-step)
+## Research Foundation
 
-2. Apply Research-Based Techniques
-   - Few-Shot Prompting: 2-8 high-quality examples with consistent formatting
-   - Chain-of-Thought: "Let's think step by step" for reasoning tasks
-   - Decomposition: Break complex problems into sub-tasks
-   - Self-Consistency: Multiple reasoning paths when needed
-   - XML tags for structure: `<context>`, `<instructions>`, `<examples>`
+This framework is built on two comprehensive surveys of prompting techniques:
 
-3. Claude Optimizations
-   - Be explicit and detailed (don't rely on inference)
-   - Explain WHY things matter (context/motivation)
-   - Specify exact output format and constraints
-   - Define clear success criteria
+- **["The Prompt Report: A Systematic Survey of Prompting Techniques"](https://arxiv.org/abs/2406.06608)** (Schulhoff et al., 2024, updated Feb 2025). Surveyed 1,500+ research papers. Cataloged 58 distinct prompting techniques with effectiveness data across task types. The primary source for the core technique taxonomy in this framework.
 
-4. Check Against Common Issues
-   - Ambiguous wording
-   - Missing output format specification
-   - Poor example quality or ordering
-   - Unclear edge case handling
-   - Prompt injection vulnerabilities
+- **["A Systematic Survey of Prompt Engineering in Large Language Models: Techniques and Applications"](https://arxiv.org/abs/2402.07927)** (Sahoo et al., 2024, updated March 2025). Covers 41+ techniques organized by application domain. Published in Springer's Frontiers of Computer Science. Source for newer techniques including Chain-of-Draft, Graph-of-Thoughts, Thread-of-Thought, Logic-of-Thought, Code Prompting, and System 2 Attention.
 
----
+The technique taxonomy, component model, and best practices in this framework are drawn from both surveys and adapted into a practical evaluation system for AI product management.
 
-## Response Format
+## How It Works
 
-When optimizing prompts, provide:
-1. **Analysis:** What works, what's missing, what could improve
-2. **Recommended Techniques:** Specific methods from research (CoT, ICL, etc.)
-3. **Optimized Version:** Restructured prompt with improvements
-4. **Rationale:** Why each change improves performance
-5. **Testing Suggestions:** How to validate improvements
+The framework runs in five steps. Each step produces a concrete output.
 
----
+**Step 1: Assess.** Identify what the prompt has and what it's missing. Every effective prompt needs a clear directive, relevant context, output format specification, and reasoning guidance. Most prompts are missing at least two of these.
 
-## Core Components Assessment
+**Step 2: Diagnose.** Match the task type to the right technique. A classification task needs few-shot examples. A reasoning task needs chain-of-thought. A complex multi-step task needs decomposition. The wrong technique for the task type is why most prompts underperform.
 
-Evaluate whether the prompt includes these essential elements:
+**Step 3: Optimize.** Restructure the prompt using the recommended techniques. Add what's missing. Remove what's creating ambiguity. Reorder examples (ordering alone can swing accuracy by 40+ points in research studies).
 
-| Component | Description | Required? |
-|-----------|-------------|-----------|
-| Directive | Clear instruction or question (the core intent) | Always |
-| Role/Persona | Assigned identity for the AI | When beneficial |
-| Context | Necessary background data | Usually |
-| Examples/Exemplars | Demonstrations of the task (for ICL) | For pattern tasks |
-| Output Format | Structured specifications for the response | Always |
-| Style Instructions | Tone, length, or formatting preferences | When relevant |
-| Reasoning Guidance | Instructions for thinking process (CoT, etc.) | For complex tasks |
+**Step 4: Validate.** Explain every change and why it should improve performance. Document trade-offs (added complexity vs. clarity, token usage vs. accuracy). No change without a rationale.
 
----
+**Step 5: Test.** Define how to verify the optimized prompt works. Specify what to test, what failure modes to watch for, and how to compare against the baseline.
 
-## Technique Taxonomy
+## Core Components
 
-### In-Context Learning (ICL)
-- **Zero-Shot:** No examples (appropriate for well-defined tasks)
-- **Few-Shot:** 2-8 examples (for pattern demonstration)
-- **Considerations:** exemplar quantity, ordering, label distribution, similarity to test case
+Every prompt is evaluated against seven components. If any required component is missing, that's the first fix.
 
-### Thought Generation
-- **Chain-of-Thought (CoT):** "Let's think step by step" for reasoning tasks
-- **Zero-Shot CoT:** Simple thought inducer
-- **Few-Shot CoT:** Examples with reasoning chains
-- **Step-Back Prompting:** High-level question before details
-- **Plan-and-Solve:** "Devise a plan and solve step by step"
+| Component | What It Does | When You Need It |
+|-----------|-------------|-----------------|
+| Directive | The core instruction. What you want the model to do. | Always |
+| Role/Persona | An assigned identity that shapes the response style and expertise level. | When domain expertise or a specific perspective improves the output |
+| Context | Background information the model needs to produce a good answer. | Almost always. Models cannot infer what you don't provide. |
+| Examples | Demonstrations of the task with correct outputs. | When you need the model to follow a specific pattern or format |
+| Output Format | Explicit specification of how the response should be structured. | Always. Unspecified format produces inconsistent results. |
+| Style Instructions | Tone, length, vocabulary, or formatting constraints. | When the default style doesn't match the use case |
+| Reasoning Guidance | Instructions for how to think through the problem. | For any task involving logic, math, analysis, or multi-step reasoning |
 
-### Decomposition
-- **Least-to-Most:** Break into sub-problems sequentially
-- **Tree-of-Thought:** Explore multiple reasoning paths
-- **Recursion-of-Thought:** Recursive sub-problem solving
+## Technique Selection
 
-### Self-Criticism
-- **Self-Refine:** Iterative feedback and improvement
-- **Chain-of-Verification:** Verify answers with follow-up questions
-- **Self-Calibration:** Confidence assessment
+The framework maps task types to specific, research-backed prompting techniques. Selecting the right technique matters more than wordsmithing.
 
-### Ensembling
-- **Self-Consistency:** Multiple reasoning paths, majority vote
-- **DENSE:** Multiple exemplar sets
-- **Meta-CoT:** Aggregate multiple reasoning chains
+### When to Use Few-Shot Learning
 
----
+Give the model 2-8 examples of the task with correct outputs. Use this when the task follows a pattern (classification, extraction, formatting, translation between formats).
 
-## Prompt Engineering Best Practices
+Key details that most people miss:
+- Example quality matters more than quantity. One good example beats five mediocre ones.
+- Example ordering affects accuracy significantly. Research shows 40+ point swings from reordering alone.
+- Include edge cases. If you only show easy examples, the model handles easy cases well and fails on hard ones.
+- Balance your labels. If 7 of 8 examples have the same label, the model is biased toward that label.
 
-### Clarity and Specificity
-- Use explicit, detailed instructions
-- Explain WHY something matters (provide context/motivation)
-- Be specific about desired output (don't rely on model to infer)
-- Define success criteria clearly
+### When to Use Chain-of-Thought
 
-### Structure and Format
-- Use XML tags for organization: `<context>`, `<instructions>`, `<examples>`
-- Separate different types of information clearly
-- Specify output format explicitly (JSON, markdown, etc.)
-- Use consistent formatting throughout
+Add "Let's think step by step" or include examples that show the reasoning process, not just the answer. Use this for any task involving reasoning: math, logic, analysis, comparison, evaluation.
 
-### Examples and Demonstrations
-- 2-8 exemplars is typically optimal (more for long context)
-- Include edge cases and challenging examples
-- Ensure label quality and balanced distribution
-- Order randomly or by similarity to test case
-- Use consistent formatting across examples
+Variants:
+- **Zero-shot CoT:** Just add "Let's think step by step." Simple and surprisingly effective.
+- **Few-shot CoT:** Provide examples that include the reasoning chain, not just the input and output. More work to set up, better results.
+- **Plan-and-Solve:** "Devise a plan, then solve step by step." Forces the model to organize before executing.
+- **Step-Back Prompting:** Ask a high-level question first, then use that answer to inform the detailed response.
 
-### Advanced Techniques
-- Add reasoning chains for complex tasks (CoT)
-- Request step-by-step thinking for math/logic
-- Use role prompting for specialized perspectives
-- Include negative examples for contrastive learning
-- Specify constraints and edge case handling
+### When to Use Chain-of-Draft
 
----
+A lighter version of Chain-of-Thought. Each reasoning step is as short as possible: just enough to capture the key insight, not a full explanation. Use this when you need reasoning but token cost or latency matters.
 
-## Common Issues to Avoid
+CoD produces reasoning chains that are 7-8x shorter than CoT while maintaining comparable accuracy. It works because most intermediate reasoning steps contain filler language that doesn't contribute to the answer. Stripping that filler forces the model to focus on what actually matters at each step.
 
-### Prompt Sensitivity
-- Ambiguous wording that could be interpreted multiple ways
-- Inconsistent formatting between examples
-- Poorly ordered exemplars (can cause 40+ point accuracy swings)
-- Unbalanced label distributions in examples
+Best for: math, logic, any task where CoT works but the verbose reasoning is unnecessary.
 
-### Security and Safety
-- Prompts vulnerable to injection attacks
-- Missing guardrails for inappropriate content
-- Unclear boundaries for model behavior
+### When to Use Decomposition
 
-### Alignment Issues
-- Overly vague success criteria
-- Missing specification of output format
-- No guidance on handling uncertainty
-- Biased or non-representative examples
+Break a complex problem into smaller sub-problems and solve each one. Use this when a single prompt tries to do too many things at once.
 
----
+- **Least-to-Most:** Start with the simplest sub-problem, use that answer to solve the next, build up to the full answer.
+- **Tree-of-Thought:** Explore multiple reasoning paths in parallel, then select the best one.
+- **Graph-of-Thoughts:** Like Tree-of-Thought but allows merging insights from different branches. Human thinking is not a tree. It's a graph: ideas connect, combine, and loop back. GoT improved accuracy by 5.08% over CoT on math reasoning with T5-large.
 
-## Optimization Process
+### When to Use Reasoning with Action (ReAct)
 
-### Step 1: Initial Assessment
+The model alternates between thinking and acting. A reasoning step ("I need to find the current price") is followed by an action step (search the web, query a database, call an API), then the model reasons about the result before deciding the next action.
 
-```
-CURRENT PROMPT ANALYSIS:
-- Task Type: [classification/generation/reasoning/etc.]
-- Core Components Present: [list what exists]
-- Core Components Missing: [list gaps]
-- Applicable Techniques: [recommend from taxonomy]
-- Identified Issues: [sensitivity, ambiguity, security, etc.]
-```
+This is the foundation of agentic AI. Any system where an LLM needs to use tools, access external data, or take actions in the real world builds on ReAct. It reduces hallucination because the model grounds its reasoning in real retrieved data rather than generating from memory alone.
 
-### Step 2: Technique Recommendations
+Best for: research tasks, fact-checking, any workflow that requires external data, agentic AI systems.
 
-```
-RECOMMENDED TECHNIQUES:
-1. [Technique Name]: [Why it helps this specific prompt]
-2. [Technique Name]: [Expected improvement]
-3. [Technique Name]: [Implementation details]
-```
+### When to Use Self-Criticism
 
-### Step 3: Optimized Prompt
+Have the model evaluate and improve its own output. Use this when accuracy matters more than speed.
 
-Present the improved version with annotations explaining key improvements.
+- **Self-Refine:** Generate an answer, critique it, then improve based on the critique. GPT-4 showed 8.7 point improvement in code optimization and 21.6 points in sentiment reversal using iterative self-refinement.
+- **Chain-of-Verification:** Generate an answer, create verification questions, answer those questions, then revise if the verification reveals errors.
+- **Self-Consistency:** Generate multiple answers using different reasoning paths, then select the most common conclusion. Improved accuracy by 17.9% on GSM8K math reasoning.
+- **Self-Harmonized CoT (ECHO):** Automatically generates diverse reasoning chains, then unifies them into a coherent pattern. Outperformed Auto-CoT by 2.8% across 10 benchmarks while retaining performance with 50% fewer examples.
 
-### Step 4: Rationale and Trade-offs
+## Common Failure Modes
 
-```
-IMPROVEMENTS MADE:
-- [Change 1]: [Why this helps / What research supports it]
-- [Change 2]: [Expected impact / Trade-offs considered]
-- [Change 3]: [Alternative approaches considered]
+Before optimizing, check whether the prompt fails for one of these reasons:
 
-TRADE-OFFS:
-- [Any increase in complexity vs. clarity]
-- [Token usage implications]
-- [Task-specific considerations]
-```
+**Ambiguity.** The instruction could be interpreted multiple ways. If you can read the prompt and imagine two different valid responses, it's ambiguous.
 
-### Step 5: Testing Recommendations
+**Missing format specification.** The prompt says what to do but not how to structure the output. The model guesses, and its guess rarely matches what you wanted.
 
-```
-SUGGESTED VALIDATION:
-1. Test with [X] diverse examples
-2. Verify [specific capabilities]
-3. Check for [potential failure modes]
-4. Consider A/B testing against baseline
-```
+**Poor examples.** Examples that are too easy, too similar, inconsistently formatted, or incorrectly labeled. The model learns the wrong pattern.
 
----
+**No reasoning guidance.** The prompt asks for a complex analysis but doesn't instruct the model to think through it. The model jumps to a conclusion instead of reasoning.
+
+**Noisy or chaotic context.** The prompt includes a long, messy input (a meeting transcript, an email thread, a scraped web page) but doesn't tell the model how to process it. Thread-of-Thought (ThoT) addresses this: break the context into segments, analyze each one, then synthesize. Research showed 47% improvement on question answering in chaotic contexts.
+
+**Unfaithful reasoning.** The model generates reasoning steps that look logical but the conclusion doesn't actually follow from them. Logic-of-Thought (LoT) addresses this by extracting formal logic from the prompt, extending it using propositional logic rules, and feeding the extended logic back into the prompt. Improved CoT accuracy by 4.35% on logical reasoning benchmarks.
+
+**Prompt injection vulnerability.** User-provided input inside the prompt could override the instructions. This matters for any prompt that processes external content (emails, web pages, user messages, documents).
+
+**Irrelevant context contamination.** The input contains information that is technically present but irrelevant to the task, and the model gives it undue weight. System 2 Attention (S2A) addresses this by having the model regenerate the input context to filter out irrelevant parts before answering. Achieved 80.3% accuracy on factual QA tasks.
+
+## Optimization Output Format
+
+Every optimization produces five deliverables:
+
+**1. Analysis.** What the current prompt does well, what it's missing, and what's causing failures.
+
+**2. Technique Recommendations.** Specific methods from the taxonomy matched to this prompt's task type, with rationale for each.
+
+**3. Optimized Prompt.** The restructured version with improvements applied. Uses XML tags for structure where appropriate (<context>, <instructions>, <examples>).
+
+**4. Rationale.** Why each change was made, what research supports it, and what trade-offs were considered.
+
+**5. Testing Plan.** How to validate that the optimized prompt performs better than the original. What to test, what failure modes to watch for, and how to measure improvement.
 
 ## Evaluation Checklist
 
-Before finalizing any prompt, verify:
+Before finalizing any prompt:
 
-- [ ] Task directive is clear and explicit
-- [ ] Role assignment (if needed) is specific and relevant
-- [ ] Context/background is complete but concise
-- [ ] Examples are high-quality, diverse, and properly formatted
+- [ ] Task directive is clear and cannot be misinterpreted
+- [ ] Role assignment (if used) adds genuine value
+- [ ] Context is complete but not padded with irrelevant information
+- [ ] Examples are high-quality, diverse, and consistently formatted
 - [ ] Output format is explicitly specified
-- [ ] Reasoning approach is guided (CoT/planning if needed)
+- [ ] Reasoning approach matches the task complexity
 - [ ] Edge cases and constraints are addressed
-- [ ] Style/tone matches the use case
-- [ ] No ambiguous language or unclear terms
-- [ ] Resilient to prompt sensitivity issues
-- [ ] Appropriate for the target model
+- [ ] No ambiguous language
+- [ ] Resilient to prompt injection if processing external content
+- [ ] Tested against at least 3 diverse inputs before deployment
 
----
+## References
 
-## Research References
+- **["The Prompt Report: A Systematic Survey of Prompting Techniques"](https://arxiv.org/abs/2406.06608)** (Schulhoff et al., 2024, updated Feb 2025). 1,500+ papers, 58 techniques. Primary taxonomy source.
+- **["A Systematic Survey of Prompt Engineering in Large Language Models"](https://arxiv.org/abs/2402.07927)** (Sahoo et al., 2024, updated March 2025). 41+ techniques by application domain. Source for Chain-of-Draft, GoT, ThoT, LoT, Code Prompting, S2A, ECHO.
+- **"Who Validates the Validators?"**: Three Gulfs framework for understanding where LLM evaluation breaks down.
+- **Anthropic Claude documentation**: Model-specific optimization patterns (explicit instructions, XML structuring, context-before-instruction ordering).
+- **Hamel Husain + Shreya Shankar**: Practical eval pipeline design for production AI systems.
+- **Aakash Gupta**: AI PM evaluation methodology (AMI Cycle: Analyze, Measure, Improve).
+- **Eugene Yan ("Abstractive")**: Reference-based vs. reference-free evaluation metrics for LLM outputs.
 
-- "The Prompt Report: A Systematic Survey of Prompting Techniques" (Schulhoff et al., 2024) — https://arxiv.org/abs/2406.06608
-- "Who Validates the Validators?" (Three Gulfs framework for LLM evaluation)
-- Anthropic Claude documentation and best practices
-- Aakash Gupta + Hamel Husain: AI Evals for PMs (AMI Cycle: Analyze, Measure, Improve)
-- Eugene Yan: "Abstractive" (reference-based vs. reference-free evaluation metrics)
-
----
-
-*Built by Angel Torres | Alinea Consulting*
-*Portfolio: https://axiomatic-second-9fc.notion.site/AI-Product-Management-Portfolio-312817fd0f37809bbe05e51aba6a6fd9*
+Built by Angel Torres | Alinea Consulting
+Portfolio: https://axiomatic-second-9fc.notion.site/AI-Product-Management-Portfolio-312817fd0f37809bbe05e51aba6a6fd9
